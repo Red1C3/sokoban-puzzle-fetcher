@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	boardRegexStr = `var Board\s*="[.#$*@+x _!]+"`
+	boardRegexStr = `="[.#$*@+x _!]+"`
 )
 
 const (
@@ -50,6 +50,7 @@ func Fetch(url string, f map[rune]rune) string {
 		log.Fatalf("Failed to compile regex %s", boardRegexStr)
 	}
 	boardStr := boardRegex.FindString(htmlFile.String())
+	fmt.Println(boardStr)
 	boardStr = strings.Map(mapper, boardStr)
 	fmt.Println(boardStr)
 
