@@ -10,7 +10,7 @@ A tool that fetches and formats sokoban puzzles from https://sokoban.info/
 Check out ```./sokoban-puzzle-fetcher -h```
 
 ## Example
-Inputting puzzle 5_16, outputs:
+Inputting [puzzle 5_16](https://sokoban.info/?5_16), outputs:
 ```
 [
 ["🟥","🟥","🟥","🟥","🟥","🟥","🟥","🟥","🟥"],
