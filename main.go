@@ -19,5 +19,5 @@ func main() {
 	format[fetcher.PLAYERONGOAL]=fetcher.PLAYERONGOALCHAR
 	url := "https://sokoban.info/?1_2"
 	str:=fetcher.Fetch(url, format) //TODO get file name
-	parser.Parse(str,"meow.json")
+	parser.Parse(str,"meow.json",".")
 }

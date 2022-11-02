@@ -7,7 +7,7 @@ import (
 	"sokoban-puzzle-fetcher/fetcher"
 )
 
-func Parse(s string,fileName string){
+func Parse(s string,fileName string,dst string){
 	puzzle:=make([][]string,1)
 	i:=0
 	for _,ch:=range s{
@@ -20,7 +20,7 @@ func Parse(s string,fileName string){
 		}
 	}
 	puzzle=puzzle[:len(puzzle)-1]
-	file,err:=os.Create(fileName)
+	file,err:=os.Create(dst+"/"+fileName)
 	if err!=nil{
 		log.Fatalf("Failed to create file %s",fileName)
 	}
