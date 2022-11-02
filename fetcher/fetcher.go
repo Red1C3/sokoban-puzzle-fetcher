@@ -15,6 +15,9 @@ import (
 const (
 	boardRegexStr      = `="[.#$*@+x _!]+"`
 	collectionRegexStr = `<option value='[0-9]+'.*\([0-9]+\)`
+	quotesRegexStr=`'[0-9]+'`
+	numRegexStr=`[0-9]+`
+	parRegexStr=`\([0-9]+\)`
 )
 
 const (
@@ -96,34 +99,33 @@ func FetchCollections() []int {
 		log.Fatalf("Failed to compile regex %s", collectionRegexStr)
 	}
 	collectionStrings := collectionRegex.FindAllString(htmlFile.String(), -1)
-
+	quotesRegex,err:=regexp.Compile(quotesRegexStr)
+	if err!=nil{
+		log.Fatalf("Failed to compile regex %s",quotesRegexStr)
+	}
+	numRegex,err:=regexp.Compile(numRegexStr)
+	if err!=nil{
+		log.Fatalf("Failed to compile regex %s",numRegexStr)
+	}
+	parRegex,err:=regexp.Compile(parRegexStr)
+	if err!=nil{
+		log.Fatalf("Failed to compile regex %s",parRegexStr)
+	}
 	collections := make([]int, 132)
 	for _, s := range collectionStrings {
-		quotedIndex, err := regexp.MatchString("'[0-9]+'", s)
-		if err != nil {
-			log.Fatalf("Failed to match string %s", s)
-		}
-		strIndex, err := regexp.MatchString("[0-9]+", quotedIndex)
-		if err != nil {
-			log.Fatalf("Faild to match string %s", quotedIndex)
-		}
+		quotedIndex := quotesRegex.FindString(s)
+		strIndex := numRegex.FindString(quotedIndex)
 		index, err := strconv.ParseInt(strIndex, 10, 64)
 		if err != nil {
 			log.Fatalf("Failed to parse %s to int", strIndex)
 		}
-		parVal, err := regexp.MatchString(`\([0-9]+\)`, s)
-		if err != nil {
-			log.Fatalf("Failed to match string %s", s)
-		}
-		strVal, err := regexp.MatchString("[0-9]+", parVal)
-		if err != nil {
-			log.Fatalf("Failed to match string %s", parVal)
-		}
-		val, err := strconv.ParseInt(strVal, 10, 64)
+		parVal:=parRegex.FindString(s)
+		strVal:=numRegex.FindString(parVal)
+		val, err := strconv.ParseInt(strVal, 10, 32)
 		if err != nil {
 			log.Fatalf("Failed to parse %s to int", strVal)
 		}
-		collections[index] = val
+		collections[index-1] = int(val)
 	}
 	fmt.Println(collections)
 	return collections
