@@ -30,12 +30,16 @@ func main() {
 	format[fetcher.SKIP] = fetcher.BLANK
 	format[fetcher.BOXONGOAL] = fetcher.BOXONGOALCHAR
 	format[fetcher.PLAYERONGOAL] = fetcher.PLAYERONGOALCHAR
-	url := BASEURL + puzzle
-	str, queryName := fetcher.Fetch(url, format)
-	if len(name) != 0 {
-		parser.Parse(str, name, dst)
+	if all {
+		url := BASEURL + puzzle
+		str, queryName := fetcher.Fetch(url, format)
+		if len(name) != 0 {
+			parser.Parse(str, name, dst)
+		} else {
+			parser.Parse(str, queryName, dst)
+		}
 	} else {
-		parser.Parse(str, queryName, dst)
+		fetcher.FetchCollections()
 	}
 }
 
