@@ -10,7 +10,6 @@ import (
 	"strings"
 )
 
-// <option value='1' selected="selected">Original &amp; Extra &nbsp; (90)</option>
 const (
 	boardRegexStr      = `="[.#$*@+x _!]+"`
 	collectionRegexStr = `<option value='[0-9]+'.*\([0-9]+\)`
