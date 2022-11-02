@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	url2 "net/url"
 	"regexp"
 	"strings"
 )
@@ -31,7 +32,7 @@ var (
 	format map[rune]rune
 )
 
-func Fetch(url string, f map[rune]rune) string {
+func Fetch(url string, f map[rune]rune) (string,string) {
 	format = f
 	resp, err := client.Get(url)
 	if err != nil {
@@ -54,7 +55,13 @@ func Fetch(url string, f map[rune]rune) string {
 	boardStr = strings.Map(mapper, boardStr)
 	fmt.Println(boardStr)
 
-	return boardStr
+	fileURL,err:=url2.Parse(url)
+	if err!=nil{
+		log.Fatalf("Failed to parse %s",url)
+	}
+	query:=fileURL.RawQuery
+
+	return boardStr,query
 }
 
 func mapper(r rune) rune {

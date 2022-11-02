@@ -20,7 +20,7 @@ func Parse(s string,fileName string,dst string){
 		}
 	}
 	puzzle=puzzle[:len(puzzle)-1]
-	file,err:=os.Create(dst+"/"+fileName)
+	file,err:=os.Create(dst+"/"+fileName+".json")
 	if err!=nil{
 		log.Fatalf("Failed to create file %s",fileName)
 	}
