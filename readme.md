@@ -13,3 +13,4 @@ Check out ```./sokoban-puzzle-fetcher -h```
 ```go build```
 
 ## License
+[UNLICENSE](./UNLICENSE)
