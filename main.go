@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"sokoban-puzzle-fetcher/fetcher"
 	"sokoban-puzzle-fetcher/parser"
 	"strconv"
@@ -20,6 +21,7 @@ var (
 
 func main() {
 	parseFlags()
+
 	format := make(map[rune]rune)
 	format[fetcher.PLAYER] = fetcher.PLAYERCHAR
 	format[fetcher.BLANK] = fetcher.BLANKCHAR
@@ -31,23 +33,40 @@ func main() {
 	format[fetcher.SKIP] = fetcher.BLANKCHAR
 	format[fetcher.BOXONGOAL] = fetcher.BOXONGOALCHAR
 	format[fetcher.PLAYERONGOAL] = fetcher.PLAYERONGOALCHAR
+
+
 	if !all {
 		url := BASEURL + puzzle
-		str, queryName := fetcher.Fetch(url, format)
+		str, queryName, err := fetcher.Fetch(url, format)
+		if err != nil {
+			log.Fatalf("Failed to fetch from %s\n Error: %s", url, err)
+		}
 		if len(name) != 0 {
-			parser.Parse(str, name, dst)
+			err = parser.Parse(str, name, dst)
 		} else {
-			parser.Parse(str, queryName, dst)
+			err = parser.Parse(str, queryName, dst)
+		}
+		if err != nil {
+			log.Fatalf("Failed to parse %s\n\n\n Error:%s", str, err)
 		}
 	} else {
 		list := fetcher.FetchCollections()
+
 		for i, v := range list {
 			for j := 0; j < v; j++ {
 				url := BASEURL + strconv.Itoa(i+1) + "_" + strconv.Itoa(j+1)
-				str, queryName := fetcher.Fetch(url, format)
-				parser.Parse(str, queryName, dst)
+				str, queryName, err := fetcher.Fetch(url, format)
+				if err != nil {
+					log.Printf("Failed to fetch from %s\n Error: %s", url, err)
+					continue
+				}
+				err = parser.Parse(str, queryName, dst)
+				if err != nil {
+					log.Printf("Failed to parse %s\n\n\n\n Error:%s", str, err)
+				}
 			}
 		}
+		
 	}
 }
 
