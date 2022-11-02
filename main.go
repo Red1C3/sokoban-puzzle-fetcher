@@ -4,6 +4,7 @@ import (
 	"flag"
 	"sokoban-puzzle-fetcher/fetcher"
 	"sokoban-puzzle-fetcher/parser"
+	"strconv"
 )
 
 const (
@@ -11,7 +12,7 @@ const (
 )
 
 var (
-	puzzle = "1_2"
+	puzzle = "3_54"
 	name   = ""
 	dst    = "."
 	all    = false
@@ -27,10 +28,10 @@ func main() {
 	format[fetcher.LINEBREAK] = fetcher.LINEBREAKCHAR
 	format[fetcher.GOAL] = fetcher.GOALCHAR
 	format[fetcher.BOX] = fetcher.BOXCHAR
-	format[fetcher.SKIP] = fetcher.BLANK
+	format[fetcher.SKIP] = fetcher.BLANKCHAR
 	format[fetcher.BOXONGOAL] = fetcher.BOXONGOALCHAR
 	format[fetcher.PLAYERONGOAL] = fetcher.PLAYERONGOALCHAR
-	if all {
+	if !all {
 		url := BASEURL + puzzle
 		str, queryName := fetcher.Fetch(url, format)
 		if len(name) != 0 {
@@ -39,7 +40,14 @@ func main() {
 			parser.Parse(str, queryName, dst)
 		}
 	} else {
-		fetcher.FetchCollections()
+		list := fetcher.FetchCollections()
+		for i, v := range list {
+			for j := 0; j < v; j++ {
+				url := BASEURL + strconv.Itoa(i+1) + "_" + strconv.Itoa(j+1)
+				str, queryName := fetcher.Fetch(url, format)
+				parser.Parse(str, queryName, dst)
+			}
+		}
 	}
 }
 
@@ -49,8 +57,8 @@ func parseFlags() {
 	obstaclePtr := flag.String("obs", string(fetcher.OBSTACLECHAR), "Obstacle character as in output file")
 	playerPtr := flag.String("player", string(fetcher.PLAYERCHAR), "Player character as in output file")
 	goalPtr := flag.String("goal", string(fetcher.GOALCHAR), "Goal character as in output file")
-	boxOnGoalPtr := flag.String("bog", string(fetcher.BOXONGOAL), "Box on Goal character as in output file")
-	playerOnGoalPtr := flag.String("pog", string(fetcher.PLAYERONGOAL), "Player on Goal as in output file")
+	boxOnGoalPtr := flag.String("bog", string(fetcher.BOXONGOALCHAR), "Box on Goal character as in output file")
+	playerOnGoalPtr := flag.String("pog", string(fetcher.PLAYERONGOALCHAR), "Player on Goal as in output file")
 
 	flag.StringVar(&puzzle, "puzzle", puzzle, "Puzzle as in <group>_<puzzle>")
 	flag.StringVar(&name, "name", name, "Output file name")

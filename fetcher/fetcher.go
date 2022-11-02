@@ -1,7 +1,6 @@
 package fetcher
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -61,9 +60,7 @@ func Fetch(url string, f map[rune]rune) (string, string) {
 		log.Fatalf("Failed to compile regex %s", boardRegexStr)
 	}
 	boardStr := boardRegex.FindString(htmlFile.String())
-	fmt.Println(boardStr)
 	boardStr = strings.Map(mapper, boardStr)
-	fmt.Println(boardStr)
 
 	fileURL, err := url2.Parse(url)
 	if err != nil {
@@ -127,6 +124,5 @@ func FetchCollections() []int {
 		}
 		collections[index-1] = int(val)
 	}
-	fmt.Println(collections)
 	return collections
 }
