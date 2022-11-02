@@ -5,6 +5,10 @@ import (
 	"sokoban-puzzle-fetcher/parser"
 )
 
+const (
+	BASEURL="https://sokoban.info/?"
+)
+
 func main() {
 	format := make(map[rune]rune)
 	format[fetcher.PLAYER] = fetcher.PLAYERCHAR //TODO support custom formats
@@ -17,7 +21,7 @@ func main() {
 	format[fetcher.SKIP]=fetcher.BLANK
 	format[fetcher.BOXONGOAL]=fetcher.BOXONGOALCHAR
 	format[fetcher.PLAYERONGOAL]=fetcher.PLAYERONGOALCHAR
-	url := "https://sokoban.info/?1_2"
+	url := BASEURL+"1_2"
 	str,name:=fetcher.Fetch(url, format)
 	parser.Parse(str,name,".")
 }
